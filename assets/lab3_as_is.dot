@@ -1,0 +1,19 @@
+digraph G {
+graph [bgcolor="white", fontname="DejaVu Sans", fontsize=12, pad=.25, nodesep=.35, ranksep=.50, dpi=170];
+node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f5f5f5", color="#454545", margin=".14,.08"];
+edge [fontname="DejaVu Sans", fontsize=10, color="#444444", arrowsize=.75];
+rankdir=TB;
+start [shape=circle,label="",width=.17,style=filled,fillcolor=black];
+a [label="Разработчик получает каталог"];
+b [label="Вручную изучает схему\nи примеры значений"];
+c [label="Вручную задаёт соответствия\nи правила преобразования"];
+d [label="Пишет или изменяет импортёр"];
+e [label="Выполняет импорт\nи проверяет результат"];
+f [shape=diamond,label="Ошибки или\nизменение схемы?"];
+g [label="Передаёт подготовленные данные\nонлайн-консультанту"];
+end [shape=doublecircle,label="",width=.2,style=filled,fillcolor=black];
+start -> a -> b -> c -> d -> e -> f;
+f -> c [label="да",constraint=false];
+f -> g [label="нет"];
+g -> end;
+}
