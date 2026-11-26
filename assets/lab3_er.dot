@@ -1,0 +1,29 @@
+digraph G {
+graph [bgcolor="white", fontname="DejaVu Sans", fontsize=12, pad=.25, nodesep=.40, ranksep=.55, dpi=170];
+node [fontname="DejaVu Sans", fontsize=11, shape=plain];
+edge [fontname="DejaVu Sans", fontsize=10, color="#444444", dir=none];
+source [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>CatalogSource</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>format, connection_ref</TD></TR></TABLE>>];
+schema [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>SchemaVersion</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK source_id<BR/>fingerprint, created_at</TD></TR></TABLE>>];
+field [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>SourceAttribute</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK schema_id<BR/>path, data_type, samples</TD></TR></TABLE>>];
+attr [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>TargetAttribute</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>code, model_version<BR/>type, unit, required</TD></TR></TABLE>>];
+run [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>ImportRun</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK source_id<BR/>FK schema_id (nullable)<BR/>target_model_version<BR/>status, config_version<BR/>started_at, finished_at<BR/>duration_ms, llm_calls<BR/>tokens, cost</TD></TR></TABLE>>];
+map [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>Mapping</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK source_attr_id<BR/>FK target_attr_id (nullable)<BR/>FK run_id<BR/>method, score, status<BR/>rule_version, normalization_version<BR/>reviewer_id, reused_from_mapping_id</TD></TR></TABLE>>];
+product [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>NormalizedProduct</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK run_id<BR/>source_product_id, status</TD></TR></TABLE>>];
+value [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>ProductValue</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK product_id<BR/>FK mapping_id<BR/>raw_value, normalized_value<BR/>status, error_code</TD></TR></TABLE>>];
+error [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5"><TR><TD BGCOLOR="#e9e9e9"><B>ImportError</B></TD></TR><TR><TD ALIGN="LEFT">PK id<BR/>FK run_id<BR/>FK product_id (nullable)<BR/>FK source_attr_id (nullable)<BR/>level, code, message</TD></TR></TABLE>>];
+source -> schema [taillabel="1",headlabel="0..*"];
+source -> run [taillabel="1",headlabel="0..*"];
+schema -> field [taillabel="1",headlabel="0..*"];
+schema -> run [taillabel="1",headlabel="0..*"];
+field -> map [taillabel="1",headlabel="0..*"];
+attr -> map [taillabel="0..1",headlabel="0..*"];
+run -> map [taillabel="1",headlabel="0..*"];
+run -> product [taillabel="1",headlabel="0..*"];
+product -> value [taillabel="1",headlabel="0..*"];
+map -> value [taillabel="1",headlabel="0..*"];
+run -> error [taillabel="1",headlabel="0..*"];
+product -> error [taillabel="0..1",headlabel="0..*"];
+field -> error [taillabel="0..1",headlabel="0..*"];
+{rank=same; field; attr; run}
+{rank=same; map; product; error}
+}

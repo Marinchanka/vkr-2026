@@ -1,0 +1,32 @@
+digraph G {
+graph [bgcolor="white", fontname="DejaVu Sans", fontsize=12, pad=.25, nodesep=.38, ranksep=.50, dpi=170];
+node [fontname="DejaVu Sans", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f5f5f5", color="#454545", margin=".14,.08"];
+edge [fontname="DejaVu Sans", fontsize=10, color="#444444", arrowsize=.75];
+rankdir=TB;
+start [shape=circle,label="",width=.17,style=filled,fillcolor=black];
+a [label="Оператор задаёт источник\nи запускает импорт"];
+b [label="Система читает каталог\nи фиксирует версию схемы"];
+c [shape=diamond,label="Есть полные совместимые\nподтверждённые соответствия?"];
+d [label="Автоматическое сопоставление:\nправила → embeddings → LLM"];
+e [shape=diamond,label="Есть спорные\nсоответствия?"];
+f [label="Оператор проверяет\nтолько спорные атрибуты"];
+g [label="Для каждого товара:\nнормализовать и валидировать"];
+h [shape=diamond,label="Запуск завершён\nуспешно?"];
+i [label="Сохранить ошибки и журнал;\nоставить прежний опубликованный результат"];
+j [label="Опубликовать валидные товары\nи сохранить результаты"];
+k [label="Зафиксировать время,\nчисло вызовов LLM и ошибки"];
+end [shape=doublecircle,label="",width=.2,style=filled,fillcolor=black];
+start -> a -> b -> c;
+c -> g [label="да"];
+c -> d [label="нет"];
+d -> e;
+e -> f [label="да"];
+e -> g [label="нет"];
+f -> g;
+g -> h;
+h -> i [label="нет"];
+h -> j [label="да"];
+i -> k;
+j -> k;
+k -> end;
+}
